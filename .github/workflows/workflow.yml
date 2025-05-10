@@ -32,7 +32,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
           docker push ${{ secrets.DOCKER_USER }}/config-service:latest
 
       - name: SSH into infra-node and restart config-service
