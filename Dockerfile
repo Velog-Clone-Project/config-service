@@ -7,7 +7,8 @@ WORKDIR /app
 # 빌드된 JAR 복사 (GitHub Actions의 gradlew 빌드 후 결과물)
 COPY build/libs/app.jar app.jar
 
-# ENCRYPT_KEY는 런타임에 환경변수로 주입
+# 암호화키의 기본값을 설정
+# 런타임에 주입되기때문에 삭제해도 문제 없음
 ENV ENCRYPT_KEY=${ENCRYPT_KEY}
 
 # Spring Boot 앱 실행 java -jar app.jar 싫행
