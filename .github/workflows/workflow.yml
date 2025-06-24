@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "./k8s/config-service.yml"
-          target: "~/config/config-service.yml"
+          target: "~/config/"
 
       - name: Deploy to Kubernetes on remote server
         uses: appleboy/ssh-action@v1.0.3
@@ -51,6 +51,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/config
+            cd ~/config/k8s
             kubectl delete deployment config-service --ignore-not-found
             kubectl apply -f config-service.yml
