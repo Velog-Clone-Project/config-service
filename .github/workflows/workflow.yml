@@ -2,13 +2,13 @@ name: Deploy Config Service (on PR merge to main)
 
 on:
   pull_request:
-    types: [closed]
+    types: [ closed ]
     branches: [ main ]
 
 jobs:
   deploy:
     if: github.event.pull_request.merged == true
-    runs-on: [self-hosted, config-service]
+    runs-on: [ self-hosted, config-service ]
 
     steps:
       - name: Checkout source
@@ -34,3 +34,23 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
           docker push ${{ secrets.DOCKER_USER }}/config-service:latest
+
+      - name: Copy Kubernetes manifest to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./k8s/config-service.yml"
+          target: "~/config"
+
+      - name: Deploy to Kubernetes on remote server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/config
+            kubectl delete deployment config-service --ignore-not-found
+            kubectl apply -f config-service.yml
