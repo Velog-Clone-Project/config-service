@@ -11,3 +11,12 @@ spring:
           uri: https://github.com/Velog-Clone-Project/config-repo.git
           default-label: main
 #          search-paths: ?
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health
