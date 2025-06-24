@@ -34,14 +34,3 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
           docker push ${{ secrets.DOCKER_USER }}/config-service:latest
-
-      - name: SSH into infra-node and restart config-service
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/${{ secrets.SSH_USER }}/config-service
-            docker compose pull config-service
-            docker compose up -d --no-deps config-service
