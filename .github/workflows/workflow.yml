@@ -27,6 +27,7 @@ jobs:
 
   deploy:
     runs-on: [ self-hosted, config-service ]
+    needs: build
 
     steps:
       - name: Build Docker image
